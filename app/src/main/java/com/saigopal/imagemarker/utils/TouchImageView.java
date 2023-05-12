@@ -1,9 +1,7 @@
 package com.saigopal.imagemarker.utils;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.PointF;
@@ -15,9 +13,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
@@ -25,7 +20,6 @@ import com.saigopal.imagemarker.R;
 import com.saigopal.imagemarker.models.Points;
 import com.saigopal.imagemarker.viewModels.CurrentImageViewModel;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class TouchImageView extends androidx.appcompat.widget.AppCompatImageView implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
@@ -53,7 +47,7 @@ public class TouchImageView extends androidx.appcompat.widget.AppCompatImageView
     CurrentImageViewModel currentImageViewModel;
 
     Context context;
-    ArrayList<Points> points = new ArrayList<>();
+    ArrayList<Points> pointsArrayList = new ArrayList<>();
 
     public TouchImageView(Context context) {
         super(context);
@@ -138,11 +132,11 @@ public class TouchImageView extends androidx.appcompat.widget.AppCompatImageView
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if(points.size()>0) {
-            for(int i=0;i<points.size();i++) {
+        if(pointsArrayList.size()>0) {
+            for(int i = 0; i< pointsArrayList.size(); i++) {
                 Drawable vectorDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_outline_push_pin_24, getContext().getTheme());
                 Bitmap icon = drawableToBitmap(vectorDrawable);
-                canvas.drawBitmap(icon,points.get(i).getX() , points.get(i).getY(), null);
+                canvas.drawBitmap(icon, pointsArrayList.get(i).getX() , pointsArrayList.get(i).getY(), null);
             }
         }
 
@@ -186,14 +180,16 @@ public class TouchImageView extends androidx.appcompat.widget.AppCompatImageView
         int y = (int) e.getY();
 
 
+        addMarker(x,y);
+
         currentImageViewModel.setMarker(x,y);
 
 
         return false;
     }
 
-    public void addMarker(int x,int y,String id){
-        points.add(new Points(x,y,id));
+    public void addMarker(int x,int y){
+        pointsArrayList.add(new Points(x,y));
         invalidate();
     }
 

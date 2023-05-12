@@ -22,6 +22,7 @@
             android:layout_marginTop="30dp"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:layout_marginHorizontal="50dp"
             android:layout_gravity="center"
             android:text="Marker details"
             android:layout_width="wrap_content"
@@ -36,6 +37,7 @@
             android:layout_height="wrap_content">
         </TextView>
         <RadioGroup
+            android:id="@+id/maker_type_radio"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -62,7 +64,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_marginTop="20dp"
             android:layout_width="match_parent"
-            android:visibility="@{vieModel.markerType.equals(`text`)||vieModel.markerType.equals(`person`) ? View.VISIBLE:View.GONE,default=gone}"
+            android:visibility="@{vieModel.markerType.equals(`text`) || vieModel.markerType.equals(`person`) ? View.VISIBLE:View.GONE,default=gone}"
             android:hint="@{vieModel.markerType}"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:counterEnabled="true"

@@ -3,14 +3,23 @@ package com.saigopal.imagemarker.adapters;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.AggregateQuery;
+import com.google.firebase.firestore.AggregateQuerySnapshot;
+import com.google.firebase.firestore.AggregateSource;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.saigopal.imagemarker.R;
 import com.saigopal.imagemarker.ViewImageActivity;
 import com.saigopal.imagemarker.databinding.ImageItemsBinding;
@@ -21,9 +30,11 @@ import java.util.ArrayList;
 public class ImagesRecyclerAdapter extends RecyclerView.Adapter<ImagesRecyclerAdapter.ViewHolder> {
 
     private final ArrayList<ImageItemsModel> list;
+    private final FirebaseFirestore db;
 
     public ImagesRecyclerAdapter(ArrayList<ImageItemsModel> list) {
         this.list = list;
+        db = FirebaseFirestore.getInstance();
     }
 
     @NonNull

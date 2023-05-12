@@ -11,6 +11,9 @@
         <variable
             name="click"
             type="com.saigopal.imagemarker.adapters.ImagesRecyclerAdapter.Click" />
+        <variable
+            name="count"
+            type="String" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -69,14 +72,14 @@
                     android:layout_height="wrap_content">
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        tools:text="10"
-                        android:textStyle="bold"
+                        app:getMarkersCount="@{model.id}"
                         android:textSize="20sp"
-                        android:text="@{String.valueOf(model.markers)}"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                        android:textStyle="bold"
+                        tools:text="10">
                     </TextView>
                     <ImageView
                         android:layout_gravity="center"
