@@ -19,7 +19,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.saigopal.imagemarker.Utils.DetectConnection;
+import com.saigopal.imagemarker.utils.DetectConnection;
 import com.saigopal.imagemarker.databinding.ActivitySignInBinding;
 
 

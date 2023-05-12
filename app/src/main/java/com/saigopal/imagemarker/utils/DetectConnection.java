@@ -1,4 +1,4 @@
-package com.saigopal.imagemarker.Utils;
+package com.saigopal.imagemarker.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

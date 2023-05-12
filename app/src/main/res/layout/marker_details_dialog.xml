@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"/>
+        <variable
+            name="vieModel"
+            type="com.saigopal.imagemarker.viewModels.CurrentImageViewModel" />
+        <variable
+            name="click"
+            type="com.saigopal.imagemarker.ViewImageActivity.DialogClick" />
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:paddingHorizontal="20dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_marginTop="30dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:text="Marker details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </TextView>
+        <TextView
+            android:layout_marginTop="10dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="Marker type : "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </TextView>
+        <RadioGroup
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RadioButton
+                android:id="@+id/txt"
+                android:text="Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </RadioButton>
+            <RadioButton
+                android:id="@+id/img"
+                android:text="Image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </RadioButton>
+            <RadioButton
+                android:id="@+id/person"
+                android:text="Person"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </RadioButton>
+        </RadioGroup>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:visibility="@{vieModel.markerType.equals(`text`)||vieModel.markerType.equals(`person`) ? View.VISIBLE:View.GONE,default=gone}"
+            android:hint="@{vieModel.markerType}"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:counterEnabled="true"
+            android:layout_height="wrap_content">
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:minLines="3"
+                android:maxLines="6"
+                android:inputType="textCapSentences"
+                android:text="@={vieModel.content}"
+                android:layout_height="match_parent">
+            </com.google.android.material.textfield.TextInputEditText>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:visibility="@{vieModel.markerType.equals(`image`) ? View.VISIBLE:View.GONE,default=gone}"
+            android:orientation="vertical"
+            android:onClick="@{(view)->click.selectImage(view)}"
+            android:background="@drawable/dotted_lines_bng"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_marginTop="10dp"
+                android:id="@+id/image"
+                android:src="@drawable/ic_outline_image_24"
+                android:layout_width="match_parent"
+                android:layout_height="100dp">
+            </ImageView>
+            <TextView
+                android:text="@string/upload_image"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </TextView>
+        </LinearLayout>
+
+        <Button
+            android:layout_marginTop="10dp"
+            android:onClick="@{view->click.submit(view)}"
+            android:text="Submit"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        </Button>
+
+    </LinearLayout>
+
+</layout>
