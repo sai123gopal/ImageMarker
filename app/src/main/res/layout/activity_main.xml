@@ -19,7 +19,8 @@
         android:layout_height="match_parent">
 
         <ProgressBar
-            android:visibility="@{viewModel.status.equals(`Success`)?View.GONE:View.VISIBLE}"
+            android:id="@+id/progress_circular"
+            android:visibility="@{viewModel.status.equals(`Success`) || viewModel.status.equals(`Error`)?View.GONE:View.VISIBLE}"
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">

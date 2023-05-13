@@ -114,10 +114,6 @@ public class CurrentImageViewModel extends AndroidViewModel {
     public void submitMarker(){
 
         if(markerType.getValue().equals("image")){
-            if(content.getValue()==null || content.getValue().isEmpty()){
-                status.postValue("Please select image");
-                return;
-            }
             getImageUrl();
         }else {
             postMarker();
@@ -126,10 +122,16 @@ public class CurrentImageViewModel extends AndroidViewModel {
     }
 
     public void postMarker(){
-        if(content.getValue()==null || content.getValue().isEmpty()){
-            status.postValue("Please enter details");
-            return;
-        }
+//        if(markerType.getValue().equals("image")){
+//            if(content.getValue()==null || content.getValue().isEmpty()){
+//                status.postValue("Please select image");
+//                return;
+//            }
+//        }
+//        if(content.getValue()==null || content.getValue().isEmpty()){
+//            status.postValue("Please enter details");
+//            return;
+//        }
         showMarkerDetailsDialog.postValue(false);
         HashMap<String,Object> markerMap = new HashMap<>();
         markerMap.put("Points",points);

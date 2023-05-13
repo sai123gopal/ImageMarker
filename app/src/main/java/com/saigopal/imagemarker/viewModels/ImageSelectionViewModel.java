@@ -80,7 +80,7 @@ public class ImageSelectionViewModel extends AndroidViewModel {
         }).addOnSuccessListener(taskSnapshot ->
                 imagesRef.getDownloadUrl().addOnSuccessListener(uri -> {
                     imageUrl.setValue( uri.toString());
-                    uploadImageStatus.postValue(uri.toString());
+                    uploadImageStatus.postValue("Uploaded");
                     saveDataInFireStore();
                 }));
     }

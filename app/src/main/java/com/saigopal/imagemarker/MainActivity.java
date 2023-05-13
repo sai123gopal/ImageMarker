@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel.imagesList.observe(this, imageItemsModels -> {
             if(imageItemsModels.size()>0) {
+                binding.progressCircular.setVisibility(View.GONE);
                 imagesList.addAll(imageItemsModels);
                 adapter.notifyDataSetChanged();
             }

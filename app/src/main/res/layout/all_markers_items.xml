@@ -51,7 +51,7 @@
             </LinearLayout>
 
             <TextView
-                android:visibility="@{model.markerType.equals(`text`)||model.equals(`person`)?View.VISIBLE:View.GONE}"
+                android:visibility="@{model.markerType.equals(`text`)||model.markerType.equals(`person`)?View.VISIBLE:View.GONE}"
                 android:text="@{model.markerContent}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">

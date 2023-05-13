@@ -30,7 +30,7 @@
         <activity
             android:name=".SignInActivity"
             android:exported="true"
-            android:label="Sign In/Sign Up">
+            android:label="Image marker">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
