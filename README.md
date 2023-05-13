@@ -1,0 +1,2 @@
+# ImageMarker
+The Draw Marker Manager app is designed to simplify your drawing experience by providing essential features for organizing and managing your markers. Add drawings from storage with custom names, view a list of all drawings with details, and easily access marker profiles. Pinch-zoom to resize images, double-tap to add new markers with titles and details, and view all markers associated with a drawing. Stay organized and enhance your creativity with this user-friendly Android app.
