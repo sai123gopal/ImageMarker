@@ -89,15 +89,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:layout_marginTop="10dp"
-                android:id="@+id/image"
-                android:src="@drawable/ic_outline_image_24"
-                android:layout_width="match_parent"
-                android:layout_height="100dp">
-            </ImageView>
             <TextView
-                android:text="@string/upload_image"
+                android:layout_margin="20dp"
+                android:text="@{vieModel.markerImageUri==null ? `Select image`:`Image added`}"
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">

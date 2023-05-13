@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="model"
+            type="com.saigopal.imagemarker.models.MarkerModel" />
+        <import type="android.view.View"/>
+        <variable
+            name="click"
+            type="com.saigopal.imagemarker.adapters.AllMarkersAdapter.Click" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:padding="20dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:gravity="center"
+                    android:text="Marker type : "
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <TextView
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:gravity="center"
+                    android:text="@{model.markerType}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </TextView>
+
+            </LinearLayout>
+
+            <TextView
+                android:visibility="@{model.markerType.equals(`text`)||model.equals(`person`)?View.VISIBLE:View.GONE}"
+                android:text="@{model.markerContent}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </TextView>
+
+            <ImageView
+                android:layout_marginTop="10dp"
+                android:onClick="@{view->click.viewImage(view)}"
+                android:visibility="@{model.markerType.equals(`image`)?View.VISIBLE:View.GONE}"
+                app:loadImage="@{model.markerContent}"
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+            </ImageView>
+
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textSize="18sp"
+                    android:layout_weight="1"
+                    app:setTime="@{model.timestamp}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </TextView>
+                <Button
+                    android:onClick="@{view->click.locateMarker(view,model)}"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:text="locate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Button>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</layout>

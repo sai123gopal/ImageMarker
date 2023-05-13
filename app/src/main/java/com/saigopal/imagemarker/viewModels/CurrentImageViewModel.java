@@ -4,7 +4,6 @@ import static com.saigopal.imagemarker.viewModels.ImageSelectionViewModel.getByt
 
 import android.app.Application;
 import android.net.Uri;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -35,13 +34,15 @@ public class CurrentImageViewModel extends AndroidViewModel {
     public MutableLiveData<String> docId;
     public MutableLiveData<List<Points>> markersList;
     public MutableLiveData<Boolean> showMarkerDetailsDialog;
+    public MutableLiveData<Boolean> hideMarkersBottomSheet;
     public MutableLiveData<String> markerType;
     public MutableLiveData<String> content;
     public MutableLiveData<String> status;
     public MutableLiveData<Uri> imageUri;
+    public MutableLiveData<Uri> markerImageUri;
     private  ArrayList<Integer> points;
     public TouchImageView touchImageView;
-    public ArrayList<MarkerModel> markerModelArrayList;
+    public MutableLiveData<List<MarkerModel>> markerModelArrayList;
 
     public CurrentImageViewModel(@NonNull Application application) {
         super(application);
@@ -50,12 +51,14 @@ public class CurrentImageViewModel extends AndroidViewModel {
         firebaseFirestore = FirebaseFirestore.getInstance();
         docId = new MutableLiveData<>();
         showMarkerDetailsDialog = new MutableLiveData<>(false);
+        hideMarkersBottomSheet = new MutableLiveData<>(false);
         markerType = new MutableLiveData<>("");
         content = new MutableLiveData<>("");
         status = new MutableLiveData<>("");
         imageUri = new MutableLiveData<>();
+        markerImageUri = new MutableLiveData<>();
         points = new ArrayList<>();
-        markerModelArrayList = new ArrayList<>();
+        markerModelArrayList = new MutableLiveData<>();
     }
 
     public void setTouchImageView(TouchImageView imageView){
@@ -79,12 +82,13 @@ public class CurrentImageViewModel extends AndroidViewModel {
     }
 
     public void getAllMarkers(){
+        List<MarkerModel> modelList = new ArrayList<>();
         firebaseFirestore.collection("Markers")
                 .whereEqualTo("ImageId",docId.getValue())
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()){
-                        Toast.makeText(getApplication(), "Done"+task.getResult().size(), Toast.LENGTH_SHORT).show();
+
                         task.getResult().forEach(queryDocumentSnapshot -> {
                             String type = queryDocumentSnapshot.getString("markerType");
                             String content = queryDocumentSnapshot.getString("markerContent");
@@ -93,12 +97,14 @@ public class CurrentImageViewModel extends AndroidViewModel {
                             Timestamp timestamp = queryDocumentSnapshot.getTimestamp("Time");
                             ArrayList<Long> points = (ArrayList<Long>) queryDocumentSnapshot.get("Points");
 
+
+                            modelList.add(new MarkerModel(type,id,content,timestamp,points,imageId) );
+
                             Long x = Long.valueOf(points.get(0));
                             Long y = Long.valueOf(points.get(1));
-
-                            markerModelArrayList.add(new MarkerModel(type,id,content,timestamp,points,imageId));
                             touchImageView.addMarker(x.intValue(),y.intValue());
                         });
+                        markerModelArrayList.postValue(modelList);
                     }else {
                         status.setValue(task.getException().toString());
                     }
@@ -106,8 +112,23 @@ public class CurrentImageViewModel extends AndroidViewModel {
     }
 
     public void submitMarker(){
+
         if(markerType.getValue().equals("image")){
-           content.setValue(getImageUrl());
+            if(content.getValue()==null || content.getValue().isEmpty()){
+                status.postValue("Please select image");
+                return;
+            }
+            getImageUrl();
+        }else {
+            postMarker();
+        }
+
+    }
+
+    public void postMarker(){
+        if(content.getValue()==null || content.getValue().isEmpty()){
+            status.postValue("Please enter details");
+            return;
         }
         showMarkerDetailsDialog.postValue(false);
         HashMap<String,Object> markerMap = new HashMap<>();
@@ -124,20 +145,23 @@ public class CurrentImageViewModel extends AndroidViewModel {
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
                         status.postValue("Success");
+                        markerType.postValue("");
+                        markerImageUri.postValue(null);
+                        content.postValue("");
                         touchImageView.addMarker(points.get(0),points.get(1));
                     }
                 });
     }
 
-    private String getImageUrl() {
-        final String[] url = {""};
+    private void getImageUrl() {
+
         FirebaseStorage storage = FirebaseStorage.getInstance();
         String userId= FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
         byte[] data = new byte[0];
         try {
-            data = getBytes(getApplication(),imageUri.getValue());
+            data = getBytes(getApplication(),markerImageUri.getValue());
         } catch (IOException e) {
             e.printStackTrace();
             status.postValue("Error");
@@ -155,10 +179,10 @@ public class CurrentImageViewModel extends AndroidViewModel {
             status.postValue("Error");
         }).addOnSuccessListener(taskSnapshot ->
                 imagesRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    url[0] = uri.toString();
+                    content.setValue(uri.toString());
+                    postMarker();
                 }));
 
-        return url[0];
     }
 
 

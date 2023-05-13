@@ -9,6 +9,9 @@
         <variable
             name="viewModel"
             type="com.saigopal.imagemarker.viewModels.CurrentImageViewModel" />
+        <variable
+            name="click"
+            type="com.saigopal.imagemarker.ViewImageActivity.DialogClick" />
     </data>
 
    <RelativeLayout
@@ -25,6 +28,16 @@
            android:layout_height="400dp">
        </com.saigopal.imagemarker.utils.TouchImageView>
 
+
+       <Button
+           android:onClick="@{view->click.showBottomDialog(view)}"
+           android:layout_marginBottom="30dp"
+           android:layout_alignParentBottom="true"
+           android:layout_centerHorizontal="true"
+           android:text="Show all markers"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content">
+       </Button>
 
    </RelativeLayout>
 

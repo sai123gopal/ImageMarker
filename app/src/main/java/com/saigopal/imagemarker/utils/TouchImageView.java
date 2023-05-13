@@ -48,6 +48,7 @@ public class TouchImageView extends androidx.appcompat.widget.AppCompatImageView
 
     Context context;
     ArrayList<Points> pointsArrayList = new ArrayList<>();
+    Points round = new Points(0,0);
 
     public TouchImageView(Context context) {
         super(context);
@@ -139,6 +140,11 @@ public class TouchImageView extends androidx.appcompat.widget.AppCompatImageView
                 canvas.drawBitmap(icon, pointsArrayList.get(i).getX() , pointsArrayList.get(i).getY(), null);
             }
         }
+        if(round.getX()!=0 && round.getY()!=0){
+            Drawable vectorDrawable = VectorDrawableCompat.create(getResources(), R.drawable.ic_outline_circle_24, getContext().getTheme());
+            Bitmap icon = drawableToBitmap(vectorDrawable);
+            canvas.drawBitmap(icon,round.getX() , round.getY(), null);
+        }
 
     }
 
@@ -192,6 +198,13 @@ public class TouchImageView extends androidx.appcompat.widget.AppCompatImageView
         pointsArrayList.add(new Points(x,y));
         invalidate();
     }
+
+    public void addRoundTo(int x,int y){
+        round.setX(x);
+        round.setY(y);
+        invalidate();
+    }
+
 
     @Override
     public boolean onDoubleTapEvent(MotionEvent e) {

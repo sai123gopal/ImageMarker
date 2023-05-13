@@ -3,8 +3,8 @@ package com.saigopal.imagemarker;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -13,18 +13,21 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.saigopal.imagemarker.adapters.AllMarkersAdapter;
 import com.saigopal.imagemarker.databinding.ActivityViewImageBinding;
+import com.saigopal.imagemarker.databinding.AllMarkersDialogBinding;
 import com.saigopal.imagemarker.databinding.MarkerDetailsDialogBinding;
+import com.saigopal.imagemarker.models.MarkerModel;
 import com.saigopal.imagemarker.utils.TouchImageView;
 import com.saigopal.imagemarker.viewModels.CurrentImageViewModel;
+
+import java.util.ArrayList;
 
 public class ViewImageActivity extends AppCompatActivity {
 
@@ -32,6 +35,9 @@ public class ViewImageActivity extends AppCompatActivity {
     private CurrentImageViewModel viewModel;
     private Dialog dialog;
     private ProgressDialog progressDialog;
+    private BottomSheetDialog bottomSheerDialog;
+    private AllMarkersAdapter allMarkersAdapter;
+    private ArrayList<MarkerModel> markerModelArrayList;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -49,7 +55,9 @@ public class ViewImageActivity extends AppCompatActivity {
 
         String  id = getIntent().getStringExtra("id");
 
+
         viewModel.docId.setValue(id);
+        binding.setClick(new DialogClick());
 
         viewModel.getDetails();
         viewModel.getAllMarkers();
@@ -57,6 +65,10 @@ public class ViewImageActivity extends AppCompatActivity {
         TouchImageView touchImageView = binding.image;
         touchImageView.setViewModel(viewModel);
         viewModel.setTouchImageView(touchImageView);
+
+        markerModelArrayList = new ArrayList<>();
+        allMarkersAdapter = new AllMarkersAdapter(markerModelArrayList,touchImageView,viewModel);
+
 
         observeLiveData();
 
@@ -73,6 +85,7 @@ public class ViewImageActivity extends AppCompatActivity {
                 progressDialog.dismiss();
                 Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
             }else if(!s.isEmpty()){
+                progressDialog.dismiss();
                 Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
             }
         });
@@ -86,6 +99,20 @@ public class ViewImageActivity extends AppCompatActivity {
                 }
             }
         });
+
+        viewModel.hideMarkersBottomSheet.observe(this, aBoolean -> {
+            if(aBoolean){
+                bottomSheerDialog.dismiss();
+            }
+        });
+
+        viewModel.markerModelArrayList.observe(this, markerModels -> {
+            if(markerModels.size()>0){
+                markerModelArrayList.addAll(markerModels);
+                allMarkersAdapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
     public void showAlert(){
@@ -128,6 +155,9 @@ public class ViewImageActivity extends AppCompatActivity {
                     .galleryOnly()
                     .start(0);
         }
+        public void showBottomDialog(View view){
+            showAllMarkersDialog();
+        }
     }
 
     @Override
@@ -138,8 +168,8 @@ public class ViewImageActivity extends AppCompatActivity {
             assert data != null;
             Uri uri = data.getData();
             if (requestCode == 0) {
-                binding.image.setImageURI(uri);
-                viewModel.imageUri.postValue(uri);
+//                binding.image.setImageURI(uri);
+                viewModel.markerImageUri.postValue(uri);
             }
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
             Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show();
@@ -149,5 +179,23 @@ public class ViewImageActivity extends AppCompatActivity {
 
     }
 
+    public void showAllMarkersDialog(){
+
+        bottomSheerDialog = new BottomSheetDialog(ViewImageActivity.this);
+
+        AllMarkersDialogBinding allMarkersDialogBinding = DataBindingUtil.inflate(LayoutInflater.from(this),R.layout.all_markers_dialog,null,false);
+        bottomSheerDialog.setContentView(allMarkersDialogBinding.getRoot());
+        allMarkersDialogBinding.setLifecycleOwner(this);
+
+
+
+        allMarkersDialogBinding.recycler.setLayoutManager(new LinearLayoutManager(this));
+        allMarkersDialogBinding.recycler.setAdapter(allMarkersAdapter);
+
+
+        viewModel.hideMarkersBottomSheet.postValue(false);
+
+        bottomSheerDialog.show();
+    }
 
 }
